@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-load-tolist-from-csv
+      author: andru
+      changes:
+        - loadData:
+            file: db/changelog/changes/toLists.csv
+            tableName: to_lists
+            encoding: UTF-8
+            separator: ','
+            quotchar: '"'
+            usePreparedStatements: true
+            columns:
+              - column:
+                  header: title
+                  name: title
+              - column:
+                  header: comment
+                  name: comment
+              - column:
+                  header: description
+                  name: description
+              - column:
+                  header: makeAt
+                  name: makeAt
+                  type: datetime
+              - column:
+                  header: createdAt
+                  name: createdAt
+                  type: datetime
+              - column:
+                  header: updatedAt
+                  name: updatedAt
+                  type: datetime
+              - column:
+                  header: status
+                  name: status
+                  type: numeric

@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: toListService
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres_db
+    username: root
+    password: secret
+    driver-class-name: org.postgresql.Driver
+
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
