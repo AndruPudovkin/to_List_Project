@@ -1,11 +1,14 @@
 title,status
-Task 1,1
-Task 2,1
-Task 3,1
-Task 4,1
-Task 5,1
-Task 6,1
-Task 7,1
-Task 8,1
-Task 9,1
-Task 10,2
+Task 1,NEW
+Task 2,MOVED
+Task 3,NEW
+Task 4,IN_PROGRESS
+Task 5,MOVED
+Task 6,NEW
+Task 7,CANCELED
+Task 8,CANCELED
+Task 9,COMPLETED
+Task 10,COMPLETED
+
+
+

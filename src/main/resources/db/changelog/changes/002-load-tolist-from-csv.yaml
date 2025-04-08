@@ -21,18 +21,17 @@ databaseChangeLog:
                   header: description
                   name: description
               - column:
-                  header: makeAt
+                  header: make_at
                   name: makeAt
                   type: datetime
               - column:
-                  header: createdAt
+                  header: created_at
                   name: createdAt
                   type: datetime
               - column:
-                  header: updatedAt
+                  header: updated_at
                   name: updatedAt
                   type: datetime
               - column:
                   header: status
                   name: status
-                  type: numeric
