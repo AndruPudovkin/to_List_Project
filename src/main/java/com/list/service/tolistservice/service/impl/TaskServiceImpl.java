@@ -27,6 +27,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public TaskInfoDto getTaskDto(Integer id) {
+        Optional<TaskEntity> taskEntity = taskRepository.findById(id);
         return taskRepository.findByIdAsTaskInfoDto(id);
     }
 
