@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        gradle 'Gradle 7.6'     // Убедись, что настроено в Jenkins → Global Tool Configuration
-        jdk 'JDK 17'            // Или другой, если используется
+        gradle 'gradle 7.6'     // Убедись, что настроено в Jenkins → Global Tool Configuration
+        jdk 'Java 17'            // Или другой, если используется
     }
 
     stages {
