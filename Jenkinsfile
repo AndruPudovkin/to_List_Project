@@ -21,8 +21,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh 'ls -l ./build/libs/toListService-0.0.1-SNAPSHOT.jar'  // Проверка наличия файла
-
+                sh 'ls -l ./test.txt'  // Проверка наличия тестового файла
                 sshPublisher(
                         publishers: [
                                 sshPublisherDesc(
@@ -30,35 +29,12 @@ pipeline {
                                         verbose: true,
                                         transfers: [
                                                 sshTransfer(
-                                                        sourceFiles: './build/libs/toListService-0.0.1-SNAPSHOT.jar',
+                                                        sourceFiles: './test.txt',
                                                         remoteDirectory: 'exchange'
                                                 )
                                         ],
                                         execCommand: '''
-                    echo "Проверяем существование каталога /toList/"
-                    if [ ! -d "/toList/" ]; then
-                        echo "Каталог /toList/ не существует, создаем его"
-                        sudo mkdir -p /toList/
-                    else
-                        echo "Каталог /toList/ существует"
-                    fi
-
-                    echo "Копируем файл в /toList/"
-                    sudo cp /home/pudow/exchange/toListService-0.0.1-SNAPSHOT.jar /toList/toListService-0.0.1-SNAPSHOT.jar
-
-                    echo "Ищем и убиваем старый процесс..."
-                    PID=$(ps aux | grep toListService-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}')
-                    if [ ! -z "$PID" ]; then
-                        echo "Останавливаем процесс PID=$PID"
-                        sudo kill -9 $PID
-                    else
-                        echo "Процесс не найден, ничего не останавливаем"
-                    fi
-
-                    echo "Запускаем приложение..."
-                    cd /toList
-                    nohup java -jar toListService-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
-                    echo "Приложение запущено"
+                    echo "Тестовая команда"
                     ''',
                                         execTimeout: 120000
                                 )
