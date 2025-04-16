@@ -54,7 +54,7 @@ pipeline {
                 cd /toList
                 nohup java -jar toListService-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
                 echo "Приложение запущено"
-            EOF
+EOF
         '''
             }
         }
