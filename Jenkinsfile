@@ -21,6 +21,8 @@ pipeline {
 
         stage('Deploy') {
             steps {
+                sh 'ls -l ./build/libs/toListService-0.0.1-SNAPSHOT.jar'  // Добавили команду для проверки файла
+
                 sshPublisher(
                         publishers: [
                                 sshPublisherDesc(
