@@ -21,18 +21,14 @@ pipeline {
         stage('Deploy') {
             steps {
                 sshPublisher(
-                        publisher:[
+                        publishers:[
                                 sshPublisherDesc(
                                         configName: 'toListService',
                                         verbose: true,
                                         transfers: [
                                                 sshTransfer(
                                                         sourceFiles: "./build/libs/toListService-0.0.1-SNAPSHOT.jar",
-                                                        remoteDIrectory: "exchange"),
-                                                sshTransfer(
-                                                        sourceFiles: "")
-
-
+                                                        remoteDIrectory: "exchange")
                                         ]
                                 )
                         ]
