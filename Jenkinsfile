@@ -50,7 +50,7 @@ pipeline {
                         nohup java -jar toListService-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
                         echo "Приложение запущено"
                     ''',
-                                        execTimeout: 120000 // по желанию: таймаут выполнения в мс (2 мин)
+                                        execTimeout: 120000
                                 )
                         ]
                 )
