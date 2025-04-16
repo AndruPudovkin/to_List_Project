@@ -39,7 +39,7 @@ pipeline {
                 sh '''
             ssh -o StrictHostKeyChecking=no pudow@localhost << EOF
                 echo "Копируем файл в /toList/"
-                sudo cp /home/pudow/exchange/toListService-0.0.1-SNAPSHOT.jar /toList/toListService-0.0.1-SNAPSHOT.jar
+                sudo cp /home/pudow/exchange/build/libs/toListService-0.0.1-SNAPSHOT.jar /toList/toListService-0.0.1-SNAPSHOT.jar
 
                 echo "Ищем и убиваем старый процесс..."
                 PID=$(ps aux | grep toListService-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}')
@@ -54,7 +54,7 @@ pipeline {
                 cd /toList
                 nohup java -jar toListService-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
                 echo "Приложение запущено"
-                EOF
+            EOF
         '''
             }
         }
