@@ -21,7 +21,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh 'ls -l ./build/libs/toListService-0.0.1-SNAPSHOT.jar'  // Добавили команду для проверки файла
+                sh 'ls -l ./build/libs/toListService-0.0.1-SNAPSHOT.jar'  // Проверка наличия файла
 
                 sshPublisher(
                         publishers: [
@@ -35,22 +35,30 @@ pipeline {
                                                 )
                                         ],
                                         execCommand: '''
-                        echo "Копируем файл в /srv/toList/"
-                        sudo cp /home/pudow/exchange/toListService-0.0.1-SNAPSHOT.jar /srv/toList/toListService-0.0.1-SNAPSHOT.jar
+                    echo "Проверяем существование каталога /toList/"
+                    if [ ! -d "/toList/" ]; then
+                        echo "Каталог /toList/ не существует, создаем его"
+                        sudo mkdir -p /toList/
+                    else
+                        echo "Каталог /toList/ существует"
+                    fi
 
-                        echo "Ищем и убиваем старый процесс..."
-                        PID=$(ps aux | grep toListService-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}')
-                        if [ ! -z "$PID" ]; then
-                            echo "Останавливаем процесс PID=$PID"
-                            sudo kill -9 $PID
-                        else
-                            echo "Процесс не найден, ничего не останавливаем"
-                        fi
+                    echo "Копируем файл в /toList/"
+                    sudo cp /home/pudow/exchange/toListService-0.0.1-SNAPSHOT.jar /toList/toListService-0.0.1-SNAPSHOT.jar
 
-                        echo "Запускаем приложение..."
-                        cd /srv/toList
-                        nohup java -jar toListService-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
-                        echo "Приложение запущено"
+                    echo "Ищем и убиваем старый процесс..."
+                    PID=$(ps aux | grep toListService-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}')
+                    if [ ! -z "$PID" ]; then
+                        echo "Останавливаем процесс PID=$PID"
+                        sudo kill -9 $PID
+                    else
+                        echo "Процесс не найден, ничего не останавливаем"
+                    fi
+
+                    echo "Запускаем приложение..."
+                    cd /toList
+                    nohup java -jar toListService-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
+                    echo "Приложение запущено"
                     ''',
                                         execTimeout: 120000
                                 )
