@@ -27,24 +27,21 @@ public interface TaskRepository extends JpaRepository<TaskEntity,Integer> {
         where t.id = :id""")
     TaskInfoDto findByIdAsTaskInfoDto(@Param("id") Integer id);
 
-    @Query("SELECT new com.list.service.tolistservice.model.dto.TaskInfoDto(t.id, t.title, t.comment, t.description, t.makeAt, t.createdAt, t.updatedAt, t.status) " +
-            "FROM TaskEntity t " +
-            "WHERE t.title = :title")
-    List<TaskInfoDto> findAllByFilter(@Param("title") String title);
-
-    @Query("SELECT new com.list.service.tolistservice.model.dto.TaskInfoDto(t.id, t.title, t.comment, t.description, t.makeAt, t.createdAt, t.updatedAt, t.status) " +
-            "FROM TaskEntity t " +
-            "WHERE t.status = :status")
-    List<TaskInfoDto> findAllByFilter(@Param("status")Status status);
-
-    @Query("SELECT new com.list.service.tolistservice.model.dto.TaskInfoDto(t.id, t.title, t.comment, t.description, t.makeAt, t.createdAt, t.updatedAt, t.status) " +
-            "FROM TaskEntity t " +
-            "WHERE t.makeAt >= :fromDate")
-    List<TaskInfoDto> findAllByFilter(@Param("fromDate") LocalDateTime fromDate);
-
-    @Query("SELECT new com.list.service.tolistservice.model.dto.TaskInfoDto(t.id, t.title, t.comment, t.description, t.makeAt, t.createdAt, t.updatedAt, t.status) " +
-            "FROM TaskEntity t " +
-            "WHERE t.makeAt <= :fromDate")
-    List<TaskInfoDto> findAllByFilter(@Param("fromDate") LocalDateTime fromDate, Boolean b);
+    @Query("""
+    SELECT new com.list.service.tolistservice.model.dto.TaskInfoDto(
+        t.id, t.title, t.comment, t.description, t.makeAt, t.createdAt, t.updatedAt, t.status
+    )
+    FROM TaskEntity t
+    WHERE (:title IS NULL OR LOWER(t.title) LIKE LOWER(CONCAT('%', :title, '%')))
+      AND (:status IS NULL OR t.status = :status)
+      AND (:fromDate IS NULL OR t.makeAt >= :fromDate)
+      AND (:toDate IS NULL OR t.makeAt <= :toDate)
+    """)
+    List<TaskInfoDto> findAllByFilter(
+            @Param("title") String title,
+            @Param("status") Status status,
+            @Param("fromDate") LocalDateTime fromDate,
+            @Param("toDate") LocalDateTime toDate
+    );
 
 }

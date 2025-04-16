@@ -6,6 +6,7 @@ import com.list.service.tolistservice.model.dto.TaskFilterDto;
 import com.list.service.tolistservice.model.dto.TaskInfoDto;
 import com.list.service.tolistservice.model.dto.TaskUpdateDto;
 import com.list.service.tolistservice.model.entity.TaskEntity;
+import com.list.service.tolistservice.model.enums.Status;
 import com.list.service.tolistservice.repository.TaskRepository;
 import com.list.service.tolistservice.service.TaskService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -73,23 +75,17 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public List<TaskInfoDto> findTasksByFilter(TaskFilterDto filterDto) {
-        Boolean b = false;
-        if(filterDto.title()!=null){
-            return taskRepository.findAllByFilter(filterDto.title());
-        }
-        if (filterDto.status()!=null){
-            return taskRepository.findAllByFilter(filterDto.status());
-        }
-        if(filterDto.fromDate()!=null){
+        String title = filterDto.title();
+        Status status = filterDto.status();
+        LocalDateTime fromDate = filterDto.fromDate();
+        LocalDateTime toDate = filterDto.toDate();
 
-            return taskRepository.findAllByFilter(filterDto.fromDate());
-        }else{
+        // Если toDate не задан, установим конец текущего дня
+        if (toDate == null) {
             LocalDateTime now = LocalDateTime.now();
-            return taskRepository.findAllByFilter(LocalDateTime.of(
-                    now.getYear(),
-                    now.getMonth(),
-                    now.getDayOfMonth(),
-                    23, 59, 59), b);
+            toDate = LocalDateTime.of(now.toLocalDate(), LocalTime.MAX);
         }
+
+        return taskRepository.findAllByFilter(title, status, fromDate, toDate);
     }
 }
