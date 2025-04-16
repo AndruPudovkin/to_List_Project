@@ -21,7 +21,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // Копируем файл на удалённый сервер
+                // Копируем файл через sshPublisher
                 sshPublisher(publishers: [
                         sshPublisherDesc(
                                 configName: 'toListService',
@@ -35,29 +35,28 @@ pipeline {
                         )
                 ])
 
-                // Выполняем команды на удалённом сервере
-                sshCommand remote: [
-                        name: 'toListService'
-                ], command: '''
-            echo "Копируем файл в /srv/toList/"
-            sudo cp /home/pudow/exchange/toListService-0.0.1-SNAPSHOT.jar /srv/toList/toListService-0.0.1-SNAPSHOT.jar
+                // Выполняем команды на удалённом сервере через ssh в shell
+                sh '''
+            ssh -o StrictHostKeyChecking=no pudow@localhost << EOF
+                echo "Копируем файл в /toList/"
+                sudo cp /home/pudow/exchange/toListService-0.0.1-SNAPSHOT.jar /toList/toListService-0.0.1-SNAPSHOT.jar
 
-            echo "Ищем и убиваем старый процесс..."
-            PID=$(ps aux | grep toListService-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}')
-            if [ ! -z "$PID" ]; then
-                echo "Останавливаем процесс PID=$PID"
-                sudo kill -9 $PID
-            else
-                echo "Процесс не найден, ничего не останавливаем"
-            fi
+                echo "Ищем и убиваем старый процесс..."
+                PID=$(ps aux | grep toListService-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}')
+                if [ ! -z "$PID" ]; then
+                    echo "Останавливаем процесс PID=$PID"
+                    sudo kill -9 $PID
+                else
+                    echo "Процесс не найден, ничего не останавливаем"
+                fi
 
-            echo "Запускаем приложение..."
-            cd /srv/toList
-            nohup java -jar toListService-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
-            echo "Приложение запущено"
+                echo "Запускаем приложение..."
+                cd /toList
+                nohup java -jar toListService-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
+                echo "Приложение запущено"
+            EOF
         '''
             }
         }
     }
-
 }
