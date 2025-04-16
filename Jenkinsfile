@@ -19,29 +19,18 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            steps {
-                sh 'ls -l ./test.txt'  // Проверка наличия тестового файла
-                sshPublisher(
-                        publishers: [
-                                sshPublisherDesc(
-                                        configName: 'toListService',
-                                        verbose: true,
-                                        transfers: [
-                                                sshTransfer(
-                                                        sourceFiles: './test.txt',
-                                                        remoteDirectory: 'exchange'
-                                                )
-                                        ],
-                                        execCommand: '''
-                    echo "Тестовая команда"
-                    ''',
-                                        execTimeout: 120000
+        sshPublisher(publishers: [
+                sshPublisherDesc(
+                        configName: 'toListService',
+                        verbose: true,
+                        transfers: [
+                                sshTransfer(
+                                        sourceFiles: 'build/libs/toListService-0.0.1-SNAPSHOT.jar',
+                                        remoteDirectory: 'exchange'
                                 )
                         ]
                 )
-            }
-        }
+        ])
     }
 
 }
