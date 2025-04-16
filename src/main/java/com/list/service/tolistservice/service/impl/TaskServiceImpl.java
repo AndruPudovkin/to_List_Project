@@ -74,7 +74,6 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public List<TaskInfoDto> findTasksByFilter(TaskFilterDto filterDto) {
-        //test
 
         var spec = TaskSpecifications.build(filterDto);
 
