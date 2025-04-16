@@ -6,15 +6,14 @@ import com.list.service.tolistservice.model.dto.TaskFilterDto;
 import com.list.service.tolistservice.model.dto.TaskInfoDto;
 import com.list.service.tolistservice.model.dto.TaskUpdateDto;
 import com.list.service.tolistservice.model.entity.TaskEntity;
-import com.list.service.tolistservice.model.enums.Status;
 import com.list.service.tolistservice.repository.TaskRepository;
+import com.list.service.tolistservice.repository.TaskSpecifications;
 import com.list.service.tolistservice.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -75,17 +74,21 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public List<TaskInfoDto> findTasksByFilter(TaskFilterDto filterDto) {
-        String title = filterDto.title();
-        Status status = filterDto.status();
-        LocalDateTime fromDate = filterDto.fromDate();
-        LocalDateTime toDate = filterDto.toDate();
 
-        // Если toDate не задан, установим конец текущего дня
-        if (toDate == null) {
-            LocalDateTime now = LocalDateTime.now();
-            toDate = LocalDateTime.of(now.toLocalDate(), LocalTime.MAX);
+        var spec = TaskSpecifications.build(filterDto);
+
+        return taskRepository.findAll(spec).stream()
+                .map(task -> new TaskInfoDto(
+                        task.getId(),
+                        task.getTitle(),
+                        task.getComment(),
+                        task.getDescription(),
+                        task.getMakeAt(),
+                        task.getCreatedAt(),
+                        task.getUpdatedAt(),
+                        task.getStatus()
+                ))
+                .toList();
         }
 
-        return taskRepository.findAllByFilter(title, status, fromDate, toDate);
-    }
 }
