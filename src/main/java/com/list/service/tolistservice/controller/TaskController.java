@@ -1,20 +1,25 @@
 package com.list.service.tolistservice.controller;
 
+import com.list.service.tolistservice.model.dto.ErrorResponse;
 import com.list.service.tolistservice.model.dto.TaskCreateDto;
+import com.list.service.tolistservice.model.dto.TaskCreateRequestDto;
 import com.list.service.tolistservice.model.dto.TaskFilterDto;
 import com.list.service.tolistservice.model.dto.TaskInfoDto;
 import com.list.service.tolistservice.model.dto.TaskUpdateDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TaskController {
     String BASE_URL = "/task";
@@ -26,7 +31,7 @@ public interface TaskController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description =  "Created",
+                    description =  "Done",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = TaskInfoDto.class)
@@ -44,7 +49,8 @@ public interface TaskController {
     ResponseEntity<TaskInfoDto> getTaskInfoDto(@PathVariable("id") Integer id);
 
     @Operation(
-            description = "Создает новую задачку по ID"
+            summary = "Создание задач",
+            description = "Создание новых задач в сервисе"
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -52,7 +58,7 @@ public interface TaskController {
                     description =  "Created",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = TaskInfoDto.class)
+                            array = @ArraySchema(schema = @Schema(implementation = TaskInfoDto.class))
                     )
             ),
             @ApiResponse(
@@ -61,18 +67,18 @@ public interface TaskController {
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}
             )
     })
-    ResponseEntity<List<TaskInfoDto>> createTasks(@RequestBody List<TaskCreateDto> taskCreateDtoList);
+    ResponseEntity<Map<String, List<TaskInfoDto>>> createTasks(@Valid @RequestBody TaskCreateRequestDto createRequestDto);
 
     @Operation(
+            summary = "Удаление задачи",
             description = "Удаляет задачу по ID"
     )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "204",
-                    description =  "Created",
+                    description =  "Deleted",
                     content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = TaskInfoDto.class)
+                            mediaType = "application/json"
                     )
             ),
             @ApiResponse(
@@ -92,12 +98,13 @@ public interface TaskController {
     ResponseEntity<Void> deleteTask(@PathVariable("id") Integer id);
 
     @Operation(
+            summary = "Обновление задачи",
             description = "Обновить задачу по ID"
     )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "204",
-                    description =  "update"
+                    description =  "Update"
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -110,14 +117,19 @@ public interface TaskController {
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}
             )
     })
-    ResponseEntity<Void> updateTask(@RequestBody TaskUpdateDto taskUpdateDto);
+    ResponseEntity<Void> updateTask(@Valid @RequestBody TaskUpdateDto taskUpdateDto);
     @Operation(
-            description = "Получает список задач по фильтру"
+            summary = "Получение списка задач",
+            description = "Получение список задач в соответствии с входными параметрами"
     )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description =  "update"
+                    description =  "Update",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = TaskInfoDto.class))
+                    )
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -130,7 +142,7 @@ public interface TaskController {
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}
             )
     })
-    public ResponseEntity<List<TaskInfoDto>> getTasks(@RequestBody TaskFilterDto filterDto);
+    ResponseEntity<List<TaskInfoDto>> getTasksByFilter(@RequestBody TaskFilterDto filterDto);
 
 
 

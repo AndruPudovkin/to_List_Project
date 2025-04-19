@@ -1,5 +1,6 @@
 package com.list.service.tolistservice.service.impl;
 
+import com.list.service.tolistservice.exception.TaskNotFoundException;
 import com.list.service.tolistservice.mapper.TaskMapper;
 import com.list.service.tolistservice.model.dto.TaskCreateDto;
 import com.list.service.tolistservice.model.dto.TaskFilterDto;
@@ -28,8 +29,10 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public TaskInfoDto getTaskDto(Integer id) {
-        Optional<TaskEntity> taskEntity = taskRepository.findById(id);
-        return taskRepository.findByIdAsTaskInfoDto(id);
+        TaskEntity taskEntity = taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException("Задача с ID: "+ id +" не найдена"));
+
+        return taskMapper.toDto(taskEntity);
     }
 
     @Override
@@ -39,7 +42,7 @@ public class TaskServiceImpl implements TaskService {
         for (TaskCreateDto taskCreateDto:taskCreateDtoList) {
             TaskEntity taskEntity = taskMapper.toEntity(taskCreateDto);
             taskRepository.save(taskEntity);
-            taskInfoDtos.add(taskRepository.findByIdAsTaskInfoDto(taskEntity.getId()));
+            taskInfoDtos.add(taskMapper.toDto(taskEntity));
         }
         return taskInfoDtos;
     }
@@ -47,7 +50,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public void deleteTask(Integer id) throws NoSuchElementException {
-        Optional<TaskEntity> taskEntity = Optional.ofNullable(taskRepository.findById(id).orElseThrow(() -> new NoSuchElementException()));
+        TaskEntity taskEntity = taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException("Задача с ID: "+ id +" не найдена"));
         taskRepository.deleteById(id);
     }
 
@@ -55,19 +59,16 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public void updateTask(TaskUpdateDto taskUpdateDto) {
         TaskEntity taskEntity = taskRepository.findById(taskUpdateDto.id())
-                .orElseThrow(() -> new NoSuchElementException("Задача с id=" + taskUpdateDto.id() + " не найдена"));
+                .orElseThrow(() -> new TaskNotFoundException("Задача с ID: "+ taskUpdateDto.id() +" не найдена"));
 
-        // Обновляем поля сущности данными из DTO (только если они не null)
         Optional.ofNullable(taskUpdateDto.title()).ifPresent(taskEntity::setTitle);
         Optional.ofNullable(taskUpdateDto.comment()).ifPresent(taskEntity::setComment);
         Optional.ofNullable(taskUpdateDto.description()).ifPresent(taskEntity::setDescription);
         Optional.ofNullable(taskUpdateDto.makeAt()).ifPresent(taskEntity::setMakeAt);
         Optional.ofNullable(taskUpdateDto.status()).ifPresent(taskEntity::setStatus);
 
-        // Обновляем дату обновления задачи
         taskEntity.setUpdatedAt(LocalDateTime.now());
 
-        // Сохраняем изменения в БД
         taskRepository.save(taskEntity);
     }
 

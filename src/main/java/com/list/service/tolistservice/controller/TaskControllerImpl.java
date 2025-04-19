@@ -1,12 +1,14 @@
 package com.list.service.tolistservice.controller;
 
 import com.list.service.tolistservice.model.dto.TaskCreateDto;
+import com.list.service.tolistservice.model.dto.TaskCreateRequestDto;
 import com.list.service.tolistservice.model.dto.TaskFilterDto;
 import com.list.service.tolistservice.model.dto.TaskInfoDto;
 import com.list.service.tolistservice.model.dto.TaskUpdateDto;
 import com.list.service.tolistservice.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -29,53 +32,70 @@ import static com.list.service.tolistservice.controller.TaskController.BASE_URL;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(BASE_URL)
+@Slf4j
 public class TaskControllerImpl implements TaskController{
     private final TaskService taskService;
 
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<TaskInfoDto> getTaskInfoDto(Integer id) {
-        return Optional.ofNullable(taskService.getTaskDto(id))
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Задача не найдена"));
+        log.info("Start getTaskInfoDto: попытка получить задачу с айди {}",id);
+
+        TaskInfoDto taskInfoDto = taskService.getTaskDto(id);
+
+        log.info("getTaskInfoDto - success");
+        return ResponseEntity.ok(taskInfoDto);
     }
 
     @Override
     @PostMapping("/batch")
-    public ResponseEntity<List<TaskInfoDto>> createTasks( @RequestBody List<TaskCreateDto> taskCreateDtoList) {
-        return Optional.of(taskService.createTasks(taskCreateDtoList))
-                .map(ResponseEntity.status(HttpStatus.CREATED)::body)
-                .orElseThrow(() -> new IllegalStateException("Сервис createTask вернул null, что невозможно!"));
+    public ResponseEntity<Map<String, List<TaskInfoDto>>> createTasks(@Valid @RequestBody TaskCreateRequestDto createRequestDto) {
+        log.info("Start createTasks: попытка создания сущностей");
+
+        List<TaskCreateDto> createDtos = createRequestDto.getData();
+        Map<String, List<TaskInfoDto>> map = Map.of("data", taskService.createTasks(createDtos));
+
+        log.info("createTasks - success");
+
+        return new ResponseEntity<>(map,HttpStatus.CREATED);
     }
 
     @Override
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(Integer id) {
-        try {
-            taskService.deleteTask(id);
-            return ResponseEntity.noContent().build();
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        log.info("Start deleteTask: попытка удалить задачу с ID - {}",id);
+
+        taskService.deleteTask(id);
+
+        log.info("deleteTask - success");
+
+        return ResponseEntity.noContent().build();
     }
 
     @Override
     @PatchMapping
     public ResponseEntity<Void> updateTask(TaskUpdateDto taskUpdateDto) {
-        try {
-            taskService.updateTask(taskUpdateDto);
-            return ResponseEntity.noContent().build();
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
-        }
+        log.info("Start updateTask: попытка обновления задачи с ID -  {}",taskUpdateDto.id());
+
+        taskService.updateTask(taskUpdateDto);
+
+        log.info("updateTask - success");
+
+        return ResponseEntity.noContent().build();
     }
     @Override
     @PostMapping("/list")
-    public ResponseEntity<List<TaskInfoDto>> getTasks(@RequestBody TaskFilterDto filterDto) {
-        return Optional.ofNullable(taskService.findTasksByFilter(filterDto))
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Задача не найдена"));
+    public ResponseEntity<List<TaskInfoDto>> getTasksByFilter(@RequestBody TaskFilterDto filterDto) {
+
+        log.info("Start getTasksByFilter: попытка получить задачи удовлетворяющие пармаетрам fromDate: {},  toDate: {}, title: {}, status: {}",
+                filterDto.fromDate(),
+                filterDto.toDate(),
+                filterDto.title(),
+                filterDto.status());
+
+        List<TaskInfoDto> taskInfoDtos = taskService.findTasksByFilter(filterDto);
+
+        log.info("getTasksByFilter - success");
+        return new ResponseEntity<>(taskInfoDtos,HttpStatus.OK); 
     }
 }
