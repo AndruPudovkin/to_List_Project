@@ -23,3 +23,20 @@ springdoc:
   default-consumes-media-type: application/json
   override-with-generic-response: true
   use-fqn-for-spring-controller: false
+
+
+logging:
+  pattern:
+    console: "%d %-5level %logger-{15} : %msg%n"
+    file: "%d %-5level %logger-{15} : %msg%n"
+  level:
+    root: info
+    org:
+      springframework:
+        web: trace
+  file:
+    name: ${catalina.base:.}/logs/toList.log
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      max-history: 30
