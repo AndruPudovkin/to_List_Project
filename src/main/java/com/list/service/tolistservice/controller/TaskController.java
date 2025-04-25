@@ -1,7 +1,6 @@
 package com.list.service.tolistservice.controller;
 
 import com.list.service.tolistservice.model.dto.ErrorResponse;
-import com.list.service.tolistservice.model.dto.TaskCreateDto;
 import com.list.service.tolistservice.model.dto.TaskCreateRequestDto;
 import com.list.service.tolistservice.model.dto.TaskFilterDto;
 import com.list.service.tolistservice.model.dto.TaskInfoDto;

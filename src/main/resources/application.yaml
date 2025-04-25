@@ -3,9 +3,9 @@ spring:
     name: toListService
 
   datasource:
-    url: jdbc:postgresql://62.84.112.15:5432/tolist_db
-    username: tolistuser
-    password: toListPassword
+    url: jdbc:postgresql://${HOST}:5432/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   liquibase:
