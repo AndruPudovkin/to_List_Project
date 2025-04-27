@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @Slf4j
 @RequiredArgsConstructor
-@ControllerAdvice(basePackages = "com.list.service.toListservice")
+@ControllerAdvice(basePackages = "com.list.service.tolistservice")
 public class ExceptionGlobalHandler {
 
     @ExceptionHandler(TaskNotFoundException.class)
