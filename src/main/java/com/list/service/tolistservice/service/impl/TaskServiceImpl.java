@@ -1,6 +1,7 @@
 package com.list.service.tolistservice.service.impl;
 
 import com.list.service.tolistservice.exception.TaskNotFoundException;
+import com.list.service.tolistservice.exception.TaskNotValidDataException;
 import com.list.service.tolistservice.mapper.TaskMapper;
 import com.list.service.tolistservice.model.dto.TaskCreateDto;
 import com.list.service.tolistservice.model.dto.TaskFilterDto;
@@ -75,7 +76,9 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public List<TaskInfoDto> findTasksByFilter(TaskFilterDto filterDto) {
-
+        if (filterDto.fromDate() == null && filterDto.toDate() != null){
+            throw new TaskNotValidDataException ("Переданны неверные параметры фильтра для даты (fromDate = null & toDate!= null)");
+        }
         var spec = TaskSpecifications.build(filterDto);
 
         return taskRepository.findAll(spec).stream()
