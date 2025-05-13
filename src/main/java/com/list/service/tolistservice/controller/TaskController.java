@@ -5,6 +5,7 @@ import com.list.service.tolistservice.model.dto.TaskCreateRequestDto;
 import com.list.service.tolistservice.model.dto.TaskFilterDto;
 import com.list.service.tolistservice.model.dto.TaskInfoDto;
 import com.list.service.tolistservice.model.dto.TaskUpdateDto;
+import com.list.service.tolistservice.model.dto.TransferDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -38,7 +39,7 @@ public interface TaskController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Задача не найдена",
+                    description = "NOT FOUND",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class)
@@ -87,7 +88,7 @@ public interface TaskController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Задача не найдена",
+                    description = "NOT FOUND",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class)
@@ -112,7 +113,7 @@ public interface TaskController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "BAD REQUEST",
+                    description = "NOT FOUND",
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}
             )
     })
@@ -120,6 +121,33 @@ public interface TaskController {
     @Operation(
             summary = "Получение списка задач",
             description = "Получение список задач в соответствии с входными параметрами"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description =  "Done",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = TaskInfoDto.class))
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "BAD REQUEST",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "NOT FOUND",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}
+            )
+    })
+    ResponseEntity<List<TaskInfoDto>> getTasksByFilter(@RequestBody TaskFilterDto filterDto);
+
+    @Operation(
+            summary = "Перенос задачи",
+            description = "Принимает на вход id таски и новый статус возвращает обновленную таску. \n" +
+                    "Если новый статус - перенесена, то на вход ожидает еще и новую дату и происходит создание новой задачи."
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -137,12 +165,10 @@ public interface TaskController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "BAD REQUEST",
+                    description = "NOT FOUND",
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}
             )
     })
-    ResponseEntity<List<TaskInfoDto>> getTasksByFilter(@RequestBody TaskFilterDto filterDto);
-
-
+    ResponseEntity<TaskInfoDto> transferTask(@RequestBody TransferDto transferDto);
 
 }

@@ -5,6 +5,8 @@ import com.list.service.tolistservice.model.dto.TaskCreateRequestDto;
 import com.list.service.tolistservice.model.dto.TaskFilterDto;
 import com.list.service.tolistservice.model.dto.TaskInfoDto;
 import com.list.service.tolistservice.model.dto.TaskUpdateDto;
+import com.list.service.tolistservice.model.dto.TransferDto;
+import com.list.service.tolistservice.model.enums.Status;
 import com.list.service.tolistservice.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -97,5 +99,28 @@ public class TaskControllerImpl implements TaskController{
 
         log.info("getTasksByFilter - success");
         return new ResponseEntity<>(taskInfoDtos,HttpStatus.OK); 
+    }
+
+    @Override
+    @PostMapping("/transfer")
+    public ResponseEntity<TaskInfoDto> transferTask(@Valid @RequestBody TransferDto transferDto){
+        log.info("Start transferTask: попытка переноса задачи с id: {}, newStatus: {}, newMakeAt: {}"
+                ,transferDto.transferId()
+                ,transferDto.status()
+                ,transferDto.newMakeAt());
+
+        TaskInfoDto taskInfoDto = null;
+        if (transferDto.status().equals(Status.MOVED)){
+            log.info("Start transferNewTask, создание новой задачи");
+            taskInfoDto = taskService.transferNewTask(transferDto);
+            log.info("transferNewTask - success");
+        }else {
+            log.info("Start transferNewTask");
+            taskInfoDto = taskService.transferTask(transferDto);
+            log.info("transferNewTask - success");
+        }
+
+        log.info("transferTask - success");
+        return new ResponseEntity<>(taskInfoDto,HttpStatus.OK);
     }
 }

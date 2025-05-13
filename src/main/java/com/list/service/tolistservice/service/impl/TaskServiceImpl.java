@@ -2,12 +2,15 @@ package com.list.service.tolistservice.service.impl;
 
 import com.list.service.tolistservice.exception.TaskNotFoundException;
 import com.list.service.tolistservice.exception.TaskNotValidDataException;
+import com.list.service.tolistservice.mapper.TaskCopeMapper;
 import com.list.service.tolistservice.mapper.TaskMapper;
 import com.list.service.tolistservice.model.dto.TaskCreateDto;
 import com.list.service.tolistservice.model.dto.TaskFilterDto;
 import com.list.service.tolistservice.model.dto.TaskInfoDto;
 import com.list.service.tolistservice.model.dto.TaskUpdateDto;
+import com.list.service.tolistservice.model.dto.TransferDto;
 import com.list.service.tolistservice.model.entity.TaskEntity;
+import com.list.service.tolistservice.model.enums.Status;
 import com.list.service.tolistservice.repository.TaskRepository;
 import com.list.service.tolistservice.repository.TaskSpecifications;
 import com.list.service.tolistservice.service.TaskService;
@@ -27,6 +30,7 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper = TaskMapper.INSTANCE;
+    private final TaskCopeMapper taskCopeMapper = TaskCopeMapper.COPE_INSTANCE;
     @Override
     @Transactional
     public TaskInfoDto getTaskDto(Integer id) {
@@ -94,5 +98,30 @@ public class TaskServiceImpl implements TaskService {
                 ))
                 .toList();
         }
+    @Override
+    @Transactional
+    public TaskInfoDto transferTask(TransferDto transferDto){
+        TaskEntity taskEntity = taskRepository.findById(transferDto.transferId())
+                .orElseThrow(() -> new TaskNotFoundException("Задача с ID: "+ transferDto.transferId() +" не найдена"));
+        taskEntity.setStatus(transferDto.status());
+        taskRepository.save(taskEntity);
+        return taskMapper.toDto(taskEntity);
+    }
+
+    @Override
+    @Transactional
+    public TaskInfoDto transferNewTask(TransferDto transferDto){
+        TaskEntity taskEntity = taskRepository.findById(transferDto.transferId())
+                .orElseThrow(() -> new TaskNotFoundException("Задача с ID: "+ transferDto.transferId() +" не найдена"));
+        if(transferDto.newMakeAt().isBefore(LocalDateTime.now())){
+            throw new TaskNotValidDataException("Нельзя перенести задачу на прошедшую дату: "
+                    + transferDto.newMakeAt());
+        }
+
+        TaskEntity newTaskEntity = taskCopeMapper.copeTask(taskEntity,transferDto);
+        taskRepository.save(newTaskEntity);
+
+        return taskMapper.toDto(newTaskEntity);
+    }
 
 }
