@@ -123,11 +123,4 @@ public class TaskControllerImpl implements TaskController{
         log.info("transferTask - success");
         return new ResponseEntity<>(taskInfoDto,HttpStatus.OK);
     }
-
-
-    @GetMapping()
-    public ResponseEntity<?> TestDeploy(Integer id) {
-
-        return (ResponseEntity<?>) ResponseEntity.ok();
-    }
 }
