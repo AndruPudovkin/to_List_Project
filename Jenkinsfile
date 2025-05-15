@@ -41,8 +41,8 @@ pipeline {
                     set -e
 
                     echo "Копируем JAR-файл в /toList/"
-                    sudo cp /home/pudow/exchange/toListService-0.0.1-SNAPSHOT.jar /toList/toListService-0.0.1-SNAPSHOT.jar
-                    
+                    sudo cp /home/pudow/exchange/build/libs/toListService-0.0.1-SNAPSHOT.jar /toList/toListService-0.0.1-SNAPSHOT.jar
+                  
                     echo "Перезапуск приложения через app.sh"
                     cd /toList
                     ./app.sh restart
