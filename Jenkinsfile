@@ -49,7 +49,7 @@ pipeline {
 
                     echo "Смотрим статус"
                     ./app.sh status
-                EOF
+EOF
                 '''
             }
         }
