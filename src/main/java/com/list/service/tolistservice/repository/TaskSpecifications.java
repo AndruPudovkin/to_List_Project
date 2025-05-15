@@ -18,7 +18,9 @@ public class TaskSpecifications {
 
     private static Specification<TaskEntity> hasTitle(String title) {
         return (root, query, cb) ->
-                title == null ? null : cb.equal(root.get("title"), title);
+                title == null || title.trim().isEmpty()
+                        ? null
+                        : cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase() + "%");
     }
 
     private static Specification<TaskEntity> hasStatus(Status status) {
