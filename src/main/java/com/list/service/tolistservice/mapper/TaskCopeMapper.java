@@ -17,8 +17,8 @@ public interface TaskCopeMapper {
     @Mapping(target = "comment", source = "task.comment")
     @Mapping(target = "description", source = "task.description")
     @Mapping(target = "makeAt", source = "transferDto.newMakeAt")
-    @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
-    @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())")
+    @Mapping(target = "createdAt", expression = "java(java.time.OffsetDateTime.now())")
+    @Mapping(target = "updatedAt", expression = "java(java.time.OffsetDateTime.now())")
     @Mapping(target = "status", source = "transferDto.status")
     TaskEntity copeTask(TaskEntity task, TransferDto transferDto);
 }

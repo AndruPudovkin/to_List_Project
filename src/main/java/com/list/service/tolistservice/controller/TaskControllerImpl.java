@@ -76,14 +76,14 @@ public class TaskControllerImpl implements TaskController{
 
     @Override
     @PatchMapping
-    public ResponseEntity<Void> updateTask(TaskUpdateDto taskUpdateDto) {
+    public ResponseEntity<TaskInfoDto> updateTask(TaskUpdateDto taskUpdateDto) {
         log.info("Start updateTask: попытка обновления задачи с ID -  {}",taskUpdateDto.id());
 
-        taskService.updateTask(taskUpdateDto);
+        TaskInfoDto taskInfoDto = taskService.updateTask(taskUpdateDto);
 
         log.info("updateTask - success");
 
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(taskInfoDto, HttpStatus.OK);
     }
     @Override
     @PostMapping("/list")

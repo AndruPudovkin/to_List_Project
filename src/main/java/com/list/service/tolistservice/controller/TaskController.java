@@ -103,8 +103,12 @@ public interface TaskController {
     )
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "204",
-                    description =  "Update"
+                    responseCode = "200",
+                    description =  "Update",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = TaskInfoDto.class))
+                    )
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -117,7 +121,7 @@ public interface TaskController {
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}
             )
     })
-    ResponseEntity<Void> updateTask(@Valid @RequestBody TaskUpdateDto taskUpdateDto);
+    ResponseEntity<TaskInfoDto> updateTask(@Valid @RequestBody TaskUpdateDto taskUpdateDto);
     @Operation(
             summary = "Получение списка задач",
             description = "Получение список задач в соответствии с входными параметрами"

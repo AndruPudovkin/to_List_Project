@@ -16,7 +16,7 @@ public interface TaskService {
 
     void deleteTask(Integer id);
 
-    void updateTask(TaskUpdateDto taskUpdateDto);
+    TaskInfoDto updateTask(TaskUpdateDto taskUpdateDto);
     List<TaskInfoDto> findTasksByFilter(TaskFilterDto filterDto);
 
     TaskInfoDto transferTask(TransferDto transferDto);
