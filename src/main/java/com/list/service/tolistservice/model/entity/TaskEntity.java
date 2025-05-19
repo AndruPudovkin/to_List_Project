@@ -14,7 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Getter
@@ -37,14 +37,14 @@ public class TaskEntity {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "make_at")
-    private LocalDateTime makeAt;
+    @Column(name = "make_at",columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    private OffsetDateTime makeAt;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @Column(name = "created_at",columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    private OffsetDateTime createdAt;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @Column(name = "updated_at",columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    private OffsetDateTime updatedAt;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)

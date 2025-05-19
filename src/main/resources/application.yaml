@@ -12,6 +12,11 @@ spring:
     enabled: true
     change-log: classpath:/db/changelog/db.changelog-master.yaml
 
+  jackson:
+    time-zone: Europe/Moscow
+    serialization:
+      write-dates-as-timestamps: false
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html      # URL для Swagger UI

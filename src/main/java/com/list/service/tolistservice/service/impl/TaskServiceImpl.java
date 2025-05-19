@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -62,7 +63,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public void updateTask(TaskUpdateDto taskUpdateDto) {
+    public TaskInfoDto updateTask(TaskUpdateDto taskUpdateDto) {
         TaskEntity taskEntity = taskRepository.findById(taskUpdateDto.id())
                 .orElseThrow(() -> new TaskNotFoundException("Задача с ID: "+ taskUpdateDto.id() +" не найдена"));
 
@@ -72,9 +73,10 @@ public class TaskServiceImpl implements TaskService {
         Optional.ofNullable(taskUpdateDto.makeAt()).ifPresent(taskEntity::setMakeAt);
         Optional.ofNullable(taskUpdateDto.status()).ifPresent(taskEntity::setStatus);
 
-        taskEntity.setUpdatedAt(LocalDateTime.now());
+        taskEntity.setUpdatedAt(OffsetDateTime.now());
 
         taskRepository.save(taskEntity);
+        return taskMapper.toDto(taskEntity);
     }
 
     @Override
@@ -113,7 +115,7 @@ public class TaskServiceImpl implements TaskService {
     public TaskInfoDto transferNewTask(TransferDto transferDto){
         TaskEntity taskEntity = taskRepository.findById(transferDto.transferId())
                 .orElseThrow(() -> new TaskNotFoundException("Задача с ID: "+ transferDto.transferId() +" не найдена"));
-        if(transferDto.newMakeAt().isBefore(LocalDateTime.now())){
+        if(transferDto.newMakeAt().isBefore(OffsetDateTime.now())){
             throw new TaskNotValidDataException("Нельзя перенести задачу на прошедшую дату: "
                     + transferDto.newMakeAt());
         }

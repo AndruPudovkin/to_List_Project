@@ -14,8 +14,8 @@ public interface TaskMapper {
     TaskInfoDto toDto(TaskEntity task);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", expression = "java(LocalDateTime.now())")
-    @Mapping(target = "updatedAt", expression = "java(LocalDateTime.now())")
+    @Mapping(target = "createdAt", expression = "java(OffsetDateTime.now())")
+    @Mapping(target = "updatedAt", expression = "java(OffsetDateTime.now())")
     TaskEntity toEntity(TaskCreateDto dto);
 
 }

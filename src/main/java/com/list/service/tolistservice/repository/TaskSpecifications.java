@@ -5,7 +5,7 @@ import org.springframework.data.jpa.domain.Specification;
 import com.list.service.tolistservice.model.entity.TaskEntity;
 import com.list.service.tolistservice.model.dto.TaskFilterDto;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public class TaskSpecifications {
 
@@ -28,12 +28,12 @@ public class TaskSpecifications {
                 status == null ? null : cb.equal(root.get("status"), status);
     }
 
-    private static Specification<TaskEntity> hasFromDate(LocalDateTime fromDate) {
+    private static Specification<TaskEntity> hasFromDate(OffsetDateTime fromDate) {
         return (root, query, cb) ->
                 fromDate == null ? null : cb.greaterThanOrEqualTo(root.get("makeAt"), fromDate);
     }
 
-    private static Specification<TaskEntity> hasToDate(LocalDateTime toDate) {
+    private static Specification<TaskEntity> hasToDate(OffsetDateTime  toDate) {
         return (root, query, cb) ->
                 toDate == null ? null : cb.lessThanOrEqualTo(root.get("makeAt"), toDate);
     }
