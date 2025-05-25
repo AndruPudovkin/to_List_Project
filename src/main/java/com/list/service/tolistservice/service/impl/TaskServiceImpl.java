@@ -121,6 +121,8 @@ public class TaskServiceImpl implements TaskService {
         }
 
         TaskEntity newTaskEntity = taskCopeMapper.copeTask(taskEntity,transferDto);
+        taskEntity.setStatus(transferDto.status());
+        taskRepository.save(taskEntity);
         taskRepository.save(newTaskEntity);
 
         return taskMapper.toDto(newTaskEntity);

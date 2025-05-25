@@ -107,7 +107,7 @@ public interface TaskController {
                     description =  "Update",
                     content = @Content(
                             mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = TaskInfoDto.class))
+                            schema = @Schema(implementation = TaskInfoDto.class)
                     )
             ),
             @ApiResponse(
