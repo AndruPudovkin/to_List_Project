@@ -22,6 +22,9 @@ springdoc:
     path: /swagger-ui.html      # URL для Swagger UI
     operationsSorter: method    # Сортировка операций по HTTP-методу
     tagsSorter: alpha           # Сортировка тегов по алфавиту
+    urls:
+      - url: https://api.hfmf.ru/v1
+        name: Production API
   api-docs:
       path: /v3/api-docs          # Путь к OpenAPI JSON
   default-produces-media-type: application/json
