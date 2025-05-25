@@ -23,7 +23,7 @@ springdoc:
     operationsSorter: method    # Сортировка операций по HTTP-методу
     tagsSorter: alpha           # Сортировка тегов по алфавиту
     urls:
-      - url: https://api.hfmf.ru/v1
+      - url: https://api.hfmf.ru/api/v1
         name: Production API
   api-docs:
       path: /v3/api-docs          # Путь к OpenAPI JSON
