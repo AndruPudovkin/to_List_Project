@@ -19,19 +19,11 @@ spring:
 
 springdoc:
   swagger-ui:
-    config-url: /v3/api-docs/swagger-config
-    oauth:
-      clientId: your-client-id
-      scopes: read,write
-    persistAuthorization: true          # Сортировка тегов по алфавиту
-
+    path: /swagger-ui.html      # URL для Swagger UI
+    operationsSorter: method    # Сортировка операций по HTTP-методу
+    tagsSorter: alpha  # Сортировка тегов по алфавиту
   api-docs:
       path: /v3/api-docs          # Путь к OpenAPI JSON
-  servers:
-    - url: https://api.hfmf.ru
-      description: Production
-    - url: http://localhost:8080
-      description: Local
   default-produces-media-type: application/json
   default-consumes-media-type: application/json
   override-with-generic-response: true

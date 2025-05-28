@@ -1,6 +1,7 @@
 package com.list.service.tolistservice.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,10 +13,10 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .addServersItem(new Server()
-                        .url("https://api.hfmf.ru")  // Основной продакшен URL
-                        .description("Production Server"))
+                        .url("https://api.hfmf.ru")
+                        .description("Production"))
                 .addServersItem(new Server()
-                        .url("http://localhost:8080")  // Локальный для разработки
-                        .description("Local Development"));
+                        .url("http://localhost:8080")
+                        .description("Local"));
     }
 }
