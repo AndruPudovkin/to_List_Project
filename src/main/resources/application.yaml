@@ -19,10 +19,9 @@ spring:
 
 springdoc:
   swagger-ui:
-    enabled: true
-    config-url: /v3/api-docs/swagger-config
-    persistAuthorization: true          # Сортировка тегов по алфавиту
-
+    path: /swagger-ui.html      # URL для Swagger UI
+    operationsSorter: method    # Сортировка операций по HTTP-методу
+    tagsSorter: alpha  # Сортировка тегов по алфавиту
   api-docs:
       path: /v3/api-docs          # Путь к OpenAPI JSON
   default-produces-media-type: application/json
