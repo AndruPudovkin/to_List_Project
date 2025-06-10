@@ -32,16 +32,18 @@ springdoc:
 
 logging:
   pattern:
-    console: "%d %-5level %logger-{15} : %msg%n"
     file: "%d %-5level %logger-{15} : %msg%n"
   level:
-    root: info
+    root: debug
     org:
       springframework:
-        web: trace
+        web: info
   file:
     name: ${catalina.base:.}/logs/toList.log
   logback:
     rollingpolicy:
       max-file-size: 100MB
       max-history: 30
+jwt:
+  secret: wefh854565wqer462gvjdfhktjxlwedfiyuoeb2
+  expirationMs: 3600000

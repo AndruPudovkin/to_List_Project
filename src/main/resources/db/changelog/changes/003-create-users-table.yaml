@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-create-users-table
+      author: andru
+      changes:
+        - createTable:
+            tableName: users
+            schemaName: auth
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_role
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
