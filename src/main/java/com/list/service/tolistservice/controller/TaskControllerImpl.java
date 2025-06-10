@@ -115,9 +115,9 @@ public class TaskControllerImpl implements TaskController{
             taskInfoDto = taskService.transferNewTask(transferDto);
             log.info("transferNewTask - success");
         }else {
-            log.info("Start transferNewTask");
+            log.info("Start transferTask");
             taskInfoDto = taskService.transferTask(transferDto);
-            log.info("transferNewTask - success");
+            log.info("transferTask - success");
         }
 
         log.info("transferTask - success");

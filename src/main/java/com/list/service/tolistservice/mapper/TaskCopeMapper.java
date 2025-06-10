@@ -7,7 +7,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-import java.time.LocalDateTime;
 @Mapper(componentModel = "spring")
 public interface TaskCopeMapper {
     TaskCopeMapper COPE_INSTANCE = Mappers.getMapper(TaskCopeMapper.class);
@@ -19,6 +18,6 @@ public interface TaskCopeMapper {
     @Mapping(target = "makeAt", source = "transferDto.newMakeAt")
     @Mapping(target = "createdAt", expression = "java(java.time.OffsetDateTime.now())")
     @Mapping(target = "updatedAt", expression = "java(java.time.OffsetDateTime.now())")
-    @Mapping(target = "status", source = "transferDto.status")
+    @Mapping(target = "status", constant = "NEW")
     TaskEntity copeTask(TaskEntity task, TransferDto transferDto);
 }
